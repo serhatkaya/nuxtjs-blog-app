@@ -32,7 +32,7 @@ export default {
   css: ['~/assets/styles/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~plugins/core-component.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -60,4 +60,11 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+  router: {
+    linkActiveClass: 'active',
+  },
+  transition: {
+    name: 'fade',
+    mode: 'out-in',
+  },
 }

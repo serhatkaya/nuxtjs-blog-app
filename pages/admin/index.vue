@@ -11,14 +11,8 @@
   </div>
 </template>
 <script>
-import PostList from '~/components/posts/PostList.vue'
-import AppButton from '~/components/ui/AppButton.vue'
 export default {
   name: 'AdminPage',
-  components: {
-    PostList,
-    AppButton,
-  },
   layout: 'admin',
   computed: {
     loadedPosts() {
