@@ -3,7 +3,7 @@
     <section v-if="loadedPost" class="post">
       <h1>{{ loadedPost.title }}</h1>
       <div class="post-details">
-        <div>Last updated on {{ loadedPost.updatedDate }}</div>
+        <div>Last updated on {{ loadedPost.updatedDate | date }}</div>
         <div>Written by {{ loadedPost.author }}</div>
       </div>
       <p v-html="loadedPost.content"></p>
