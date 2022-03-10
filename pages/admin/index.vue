@@ -4,6 +4,7 @@
       <AppButton @click="$router.push('/admin/new-post')"
         >Create Post</AppButton
       >
+      <AppButton @click="onLogout">Logout</AppButton>
     </section>
     <section class="existing-posts">
       <PostList :is-admin="true" :posts="loadedPosts" />
@@ -14,9 +15,18 @@
 export default {
   name: 'AdminPage',
   layout: 'admin',
+  middleware: ['check-auth', 'auth'],
+
   computed: {
     loadedPosts() {
       return this.$store.getters.loadedPosts
+    },
+  },
+  methods: {
+    onLogout() {
+      this.$store
+        .dispatch('logout')
+        .then(() => this.$router.push('/admin/auth'))
     },
   },
 }

@@ -17,8 +17,6 @@ module.exports = {
     'vue/valid-template-root': 'off',
     'vue/no-unused-components': 'off',
     'spaced-comment': 'off',
-    'nuxt/no-timing-in-fetch-data': 'off',
-    'nuxt/no-globals-in-created': 'off',
     'no-console': 'off',
     eqeqeq: 'off',
   },

@@ -13,6 +13,7 @@ export default {
   components: {
     AdminPostForm,
   },
+  middleware: 'auth',
   asyncData(context) {
     return context.$axios
       .get(`/posts/${context.params.postId}.json`)

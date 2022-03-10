@@ -1,3 +1,4 @@
+const bodyParser = require('body-parser')
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -56,15 +57,24 @@ export default {
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
     baseURL: process.env.FIREBASE_URL || '/',
+
+    credentials: false,
+  },
+  env: {
+    FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+    FIREBASE_REGISTER_URL: `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.FIREBASE_API_KEY}`,
+    FIREBASE_LOGIN_URL: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.FIREBASE_API_KEY}`,
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
   router: {
     linkActiveClass: 'active',
+    middleware: 'log',
   },
   transition: {
     name: 'fade',
     mode: 'out-in',
   },
+  serverMiddleware: [bodyParser.json(), '~api'],
 }
