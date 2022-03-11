@@ -1,0 +1,6 @@
+overwrite: true
+schema: 'https://graphql.contentful.com/content/v1/spaces/xzzn0cvnbf2z/environments/master?access_token='
+generates:
+  ./graphql.schema.json:
+    plugins:
+      - 'introspection'

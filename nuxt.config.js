@@ -1,4 +1,3 @@
-const bodyParser = require('body-parser')
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -48,7 +47,13 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/apollo',
   ],
+  apollo: {
+    clientConfigs: {
+      default: '~/plugins/apollo-config.js',
+    },
+  },
   loading: {
     color: '#42b883',
   },
@@ -60,21 +65,16 @@ export default {
 
     credentials: false,
   },
-  env: {
-    FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-    FIREBASE_REGISTER_URL: `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.FIREBASE_API_KEY}`,
-    FIREBASE_LOGIN_URL: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.FIREBASE_API_KEY}`,
-  },
+  env: {},
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
   router: {
     linkActiveClass: 'active',
-    middleware: 'log',
   },
   transition: {
     name: 'fade',
     mode: 'out-in',
   },
-  serverMiddleware: [bodyParser.json(), '~api'],
+  serverMiddleware: [],
 }

@@ -1,12 +1,15 @@
-import Cookie from 'js-cookie'
-
+import GET_ALL_POSTS_QUERY from '~/apollo/queries/getAllPosts.gql'
+import GET_POST_BY_SLUG_QUERY from '~/apollo/queries/getPostBySlug.gql'
 export const state = () => {
-  return { loadedPosts: [], token: null }
+  return { loadedPosts: [], loadedPost: null }
 }
 
 export const mutations = {
   setPosts(state, posts) {
     state.loadedPosts = posts
+  },
+  setPost(state, post) {
+    state.loadedPost = post
   },
   addPost(state, post) {
     state.loadedPosts.push(post)
@@ -28,18 +31,42 @@ export const mutations = {
 }
 
 export const actions = {
-  nuxtServerInit({ commit, context }, { $axios }) {
-    return $axios.get('/posts.json').then((res) => {
-      const posts = []
-      for (const key in res.data) {
-        posts.push({ ...res.data[key], id: key })
-      }
-
-      commit('setPosts', posts)
-    })
+  async nuxtServerInit({ commit }, { store }) {
+    await store.dispatch('getAllPosts')
+  },
+  getAllPosts(vuexContext) {
+    const apollo = this.app.apolloProvider.defaultClient
+    return apollo
+      .query({
+        query: GET_ALL_POSTS_QUERY,
+      })
+      .then((r) => {
+        vuexContext.commit('setPosts', r.data.postCollection.items)
+      })
+  },
+  getPost(vuexContext, slug) {
+    const apollo = this.app.apolloProvider.defaultClient
+    return apollo
+      .query({
+        query: GET_POST_BY_SLUG_QUERY,
+        variables: {
+          slug,
+        },
+      })
+      .then((r) => {
+        if (
+          r.data.postCollection.items &&
+          r.data.postCollection.items.length > 0
+        ) {
+          vuexContext.commit('setPost', r.data.postCollection.items[0])
+        }
+      })
   },
   setPosts(vuexContext, posts) {
     vuexContext.commit('setPosts', posts)
+  },
+  setPost(vuexContext, post) {
+    vuexContext.commit('setPost', post)
   },
   addPost(vuexContext, post) {
     const postForCreate = { ...post, updatedDate: new Date() }
@@ -51,7 +78,6 @@ export const actions = {
       .catch((e) => console.log(e))
   },
   editPost(vuexContext, editedPost) {
-    console.log(vuexContext)
     return this.$axios
       .put(
         `/posts/${editedPost.id}.json?auth=${vuexContext.state.token}`,
@@ -59,78 +85,13 @@ export const actions = {
       )
       .then(() => vuexContext.commit('editPost', editedPost))
   },
-  authenticateUser(vuexContext, authData) {
-    const url = authData.isLogin
-      ? process.env.FIREBASE_LOGIN_URL
-      : process.env.FIREBASE_REGISTER_URL
-
-    return this.$axios
-      .$post(url, {
-        email: authData.email,
-        password: authData.password,
-        returnSecureToken: true,
-      })
-      .then((res) => {
-        const token = res.idToken
-        vuexContext.commit('setToken', token)
-        localStorage.setItem('token', token)
-        const expDate = new Date().getTime() + +res.expiresIn * 1000
-        localStorage.setItem('tokenExpiration', expDate)
-        Cookie.set('jwt', token)
-        Cookie.set('expirationDate', expDate)
-        return this.$axios.post('http://localhost:3000/api/track-data', {
-          data: 'Authenticated',
-        })
-      })
-  },
-  logout(vuexContext) {
-    vuexContext.commit('clearToken')
-    Cookie.remove('jwt')
-    Cookie.remove('expirationDate')
-    localStorage.removeItem('token')
-    localStorage.removeItem('tokenExpiration')
-  },
-
-  setLogoutTimer(vuexContext, duration) {
-    setTimeout(() => {
-      vuexContext.commit('clearToken')
-    }, duration)
-  },
-  initAuth(vuexContext, req) {
-    let token, expirationDate
-    if (req && req.headers.cookie) {
-      const jwtCookie = req.headers.cookie
-        .split(';')
-        .find((c) => c.trim().startsWith('jwt='))
-
-      if (jwtCookie) {
-        token = jwtCookie.split('=')[1]
-        expirationDate = req.headers.cookie
-          .split(';')
-          .find((c) => c.trim().startsWith('expirationDate='))
-          .split('=')[1]
-      }
-    } else if (process.client) {
-      token = localStorage.getItem('token')
-      expirationDate = localStorage.getItem('tokenExpiration')
-    }
-
-    if (token && expirationDate) {
-      if (new Date().getTime() > +expirationDate || !token) {
-        console.log('No token or invalid token')
-        vuexContext.commit('logout')
-      } else {
-        vuexContext.commit('setToken', token)
-      }
-    }
-  },
 }
 
 export const getters = {
   loadedPosts(state) {
     return state.loadedPosts
   },
-  isAuthenticated(state) {
-    return state.token != null
+  loadedPost(state) {
+    return state.loadedPost
   },
 }

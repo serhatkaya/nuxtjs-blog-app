@@ -3,10 +3,11 @@
     <section v-if="loadedPost" class="post">
       <h1>{{ loadedPost.title }}</h1>
       <div class="post-details">
-        <div>Last updated on {{ loadedPost.updatedDate | date }}</div>
+        <div>Last updated on {{ loadedPost.sys.publishedAt | date }}</div>
         <div>Written by {{ loadedPost.author }}</div>
       </div>
-      <p>{{ loadedPost.content }}</p>
+      <RichTextRenderer :rich-data="loadedPost.content" />
+      <hr />
     </section>
     <section class="post-feedback">
       <p>
@@ -18,14 +19,19 @@
 </template>
 
 <script>
+import RichTextRenderer from '~/components/ui/RichTextRenderer.vue'
 export default {
   name: 'SinglePostPage',
+  components: {
+    RichTextRenderer,
+  },
   asyncData(context) {
-    return context.$axios.get(`/posts/${context.params.id}.json`).then((r) => {
-      return {
-        loadedPost: r.data,
-      }
-    })
+    return context.store.dispatch('getPost', context.params.id)
+  },
+  computed: {
+    loadedPost() {
+      return this.$store.getters.loadedPost
+    },
   },
 }
 </script>

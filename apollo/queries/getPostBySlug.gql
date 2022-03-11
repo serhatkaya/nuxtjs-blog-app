@@ -1,0 +1,16 @@
+query getPostBySlug($slug: String!) {
+  postCollection(where: { slug: $slug }, limit: 1) {
+    items {
+      content {
+        json
+      }
+      title
+      previewText
+      author
+      slug
+      sys {
+        publishedAt
+      }
+    }
+  }
+}

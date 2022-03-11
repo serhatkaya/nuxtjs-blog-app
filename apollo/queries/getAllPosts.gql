@@ -1,0 +1,12 @@
+query getAllPosts {
+  postCollection {
+    items {
+      title
+      previewText
+      thumbnail {
+        url
+      }
+      slug
+    }
+  }
+}

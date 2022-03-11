@@ -2,11 +2,11 @@
   <section class="post-list">
     <PostPreview
       v-for="post in posts"
-      :id="post.id"
-      :key="Math.random() + post.id"
+      :id="post.slug"
+      :key="Math.random() + post.slug"
       :is-admin="isAdmin"
       :preview-text="post.previewText"
-      :thumbnail="post.thumbnail"
+      :thumbnail="post.thumbnail.url"
       :title="post.title"
     />
   </section>
