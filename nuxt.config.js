@@ -1,5 +1,6 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  target: 'static',
   head: {
     title: 'Blog',
     htmlAttrs: {
@@ -71,11 +72,11 @@ export default {
   build: {},
   router: {
     linkActiveClass: 'active',
+    nuxt,
   },
   transition: {
     name: 'fade',
     mode: 'out-in',
   },
   serverMiddleware: [],
-  target: 'static',
 }
