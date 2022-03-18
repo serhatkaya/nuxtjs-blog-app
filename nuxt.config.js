@@ -77,4 +77,5 @@ export default {
     mode: 'out-in',
   },
   serverMiddleware: [],
+  target: 'static',
 }
