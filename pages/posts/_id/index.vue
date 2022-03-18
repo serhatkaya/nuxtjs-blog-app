@@ -27,7 +27,7 @@ export default {
   },
   async asyncData(context) {
     const loadedPost = context.store.getters.loadedPost
-    if (!loadedPost) {
+    if (loadedPost == null) {
       await context.store.dispatch('getPost', context.params.id)
     }
   },
