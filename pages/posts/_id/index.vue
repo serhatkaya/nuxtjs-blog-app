@@ -25,8 +25,11 @@ export default {
   components: {
     RichTextRenderer,
   },
-  asyncData(context) {
-    return context.store.dispatch('getPost', context.params.id)
+  async asyncData(context) {
+    const loadedPost = context.store.getters.loadedPost
+    if (!loadedPost) {
+      await context.store.dispatch('getPost', context.params.id)
+    }
   },
   computed: {
     loadedPost() {
