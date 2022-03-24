@@ -1,5 +1,8 @@
 # nuxtjs-blog-app
 - Demo : http://blog.serhat.cf/
+- This repository has 2 branches named "master, contentful" 
+- "master" is works with Firebase database.
+- "contentful" is integrated with Contentful as you can see in demo.
 ## Build Setup
 
 ```bash
