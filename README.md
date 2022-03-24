@@ -1,5 +1,5 @@
 # nuxtjs-blog-app
-
+- Demo : http://blog.serhat.cf/
 ## Build Setup
 
 ```bash
